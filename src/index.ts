@@ -16,7 +16,8 @@ app.post('/railnet', async (req, res) => {
 
     const filename = path.join('data', 'railnet', `${new Date().getTime()}-combined.json`);
 
-    await fs.writeFile(filename, body, { encoding: 'utf8' });
+    await fs.mkdir(path.dirname(filename), { recursive: true });
+    await fs.writeFile(filename, JSON.stringify(body), { encoding: 'utf8' });
 
     res.status(200).send('OK');
 })
