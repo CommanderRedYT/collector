@@ -11,10 +11,24 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+let apiKeys: string[] = [];
+
 app.post('/railnet', async (req, res) => {
     const body = req.body;
 
-    console.dir(req.headers);
+    const xApiKey = req.headers['x-api-key'];
+
+    if (!xApiKey || typeof xApiKey !== 'string') {
+        return res.status(400).send({
+            error: 'Missing API key'
+        });
+    }
+
+    if (!apiKeys.includes(xApiKey)) {
+        return res.status(400).send({
+            error: 'Missing API key'
+        })
+    }
 
     const filename = path.join('data', 'railnet', `${new Date().getTime()}-combined.json`);
 
@@ -24,10 +38,17 @@ app.post('/railnet', async (req, res) => {
     res.status(200).send('OK');
 })
 
-app.listen(9123, '127.0.0.1', (err) => {
-    if (err) {
-        throw err;
-    }
+const main = async () => {
+    const file = await fs.readFile('apikeys.json', 'utf8');
+    apiKeys = JSON.parse(file);
 
-    console.log(`Listening on http://localhost:9123`);
-});
+    app.listen(9123, '127.0.0.1', (err) => {
+        if (err) {
+            throw err;
+        }
+
+        console.log(`Listening on http://localhost:9123`);
+    });
+};
+
+main();
