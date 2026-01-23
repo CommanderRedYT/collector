@@ -14,6 +14,8 @@ app.use(express.urlencoded({ extended: false }));
 app.post('/railnet', async (req, res) => {
     const body = req.body;
 
+    console.dir(req.headers);
+
     const filename = path.join('data', 'railnet', `${new Date().getTime()}-combined.json`);
 
     await fs.mkdir(path.dirname(filename), { recursive: true });
