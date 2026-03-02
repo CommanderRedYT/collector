@@ -13,9 +13,7 @@ app.use(express.urlencoded({ extended: false }));
 
 let apiKeys: string[] = [];
 
-app.post('/railnet', async (req, res) => {
-    const body = req.body;
-
+app.use((req, res, next) => {
     const xApiKey = req.headers['x-api-key'];
 
     if (!xApiKey || typeof xApiKey !== 'string') {
@@ -29,6 +27,12 @@ app.post('/railnet', async (req, res) => {
             error: 'Missing API key'
         })
     }
+
+    next();
+})
+
+app.post('/railnet', async (req, res) => {
+    const body = req.body;
 
     const filename = path.join('data', 'railnet', `${new Date().getTime()}-combined.json`);
 
