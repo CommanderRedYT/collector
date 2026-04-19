@@ -42,6 +42,13 @@ app.post('/:collectorId', async (req, res) => {
         });
     }
 
+    // collectorId may only include a-zA-Z0-9
+    if (!(/^[a-zA-Z0-9]+$/.test(xApiKey))) {
+        return res.status(400).send({
+            error: 'Missing Collector ID'
+        });
+    }
+
     if (!collectors[collectorId]) {
         return res.status(400).send({
             error: 'Missing Collector ID'
