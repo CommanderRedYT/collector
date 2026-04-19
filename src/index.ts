@@ -65,7 +65,7 @@ app.post('/:collectorId', async (req, res) => {
 
     const body = req.body;
 
-    const filename = path.join('data', 'railnet', `${new Date().getTime()}-combined.json`);
+    const filename = path.join(DATA_DIR, collectorId, `${new Date().getTime()}.json`);
 
     await fs.mkdir(path.dirname(filename), { recursive: true });
     await fs.writeFile(filename, JSON.stringify(body), { encoding: 'utf8' });
